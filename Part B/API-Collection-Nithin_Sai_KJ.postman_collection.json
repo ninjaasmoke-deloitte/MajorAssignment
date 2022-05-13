@@ -1,0 +1,221 @@
+{
+	"info": {
+		"_postman_id": "8343ca7b-eda1-436b-91b3-3d51e3ee6334",
+		"name": "API-Collection-Nithin_Sai_KJ",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Json Data",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Global Variables\r",
+							"var jsonData = pm.response.json()\r",
+							"\r",
+							"// Tests\r",
+							"\r",
+							"// Basic HTTP Code Test\r",
+							"pm.test(\"Check status Code: 200\", () => {\r",
+							"    pm.expect(pm.response.code).equals(200)\r",
+							"})\r",
+							"\r",
+							"// Basic HTTP Res Header Test\r",
+							"pm.test(\"Content-Type header is present\", () => {\r",
+							"  pm.response.to.have.header(\"Content-Type\");\r",
+							"});\r",
+							"\r",
+							"// Basic HTTP Res Time Test\r",
+							"pm.test(\"Response time is less than 200ms\", () => {\r",
+							"  pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"// Test - 1\r",
+							"pm.test(\"User with 'id' 40 has 'userId'=4\", () => {\r",
+							"    _.each(jsonData, (v) => {\r",
+							"        let id = v['id']\r",
+							"        let userId = v['userId']\r",
+							"\r",
+							"        if(id === 40) {\r",
+							"            pm.expect(userId).equals(4)\r",
+							"        }\r",
+							"    })\r",
+							"})\r",
+							"\r",
+							"// Test - 2\r",
+							"pm.test(\"Every 'title' field in the response has the type is String.\", () => {\r",
+							"    _.each(jsonData, (v) => {\r",
+							"        pm.expect(typeof v['title']).equals('string')\r",
+							"    })\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "{{jsonplaceholder-uri}}/posts"
+			},
+			"response": []
+		},
+		{
+			"name": "ReqRes Post - M2",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var req = pm.request.toJSON();\r",
+							"var jsonData = JSON.parse(req.body.raw)\r",
+							"\r",
+							"const email = jsonData['email'], \r",
+							"    fname = jsonData['first_name'];\r",
+							"\r",
+							"// set env variables\r",
+							"postman.setEnvironmentVariable(\"user-fname\", fname)\r",
+							"postman.setEnvironmentVariable(\"user-email\", email)"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Tests\r",
+							"\r",
+							"// Basic HTTP Code Test\r",
+							"pm.test(\"Check status Code: 201\", () => {\r",
+							"    pm.expect(pm.response.code).equals(201)\r",
+							"})\r",
+							"\r",
+							"// Basic HTTP Res Header Test\r",
+							"pm.test(\"Content-Type header is present\", () => {\r",
+							"  pm.response.to.have.header(\"Content-Type\");\r",
+							"});\r",
+							"\r",
+							"// Basic HTTP Res Time Test\r",
+							"pm.test(\"Response time is less than 200ms\", () => {\r",
+							"  pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+							"});\r",
+							"\r",
+							"// Major Test\r",
+							"pm.test(\"Verify the `email’ and ‘first_name’ values match with response\", () => {\r",
+							"    const env_email = pm.environment.get(\"user-email\"); \r",
+							"    const env_fname = pm.environment.get(\"user-fname\");\r",
+							"\r",
+							"    var jsonData = pm.response.json()\r",
+							"\r",
+							"    const res_email = jsonData.email\r",
+							"    const res_fname = jsonData.first_name\r",
+							"    \r",
+							"    pm.expect(res_email).eql(env_email)\r",
+							"    pm.expect(res_fname).eql(env_fname)\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \r\n    \"email\": \"amith.k@reqres.in\",\r\n    \"first_name\": \"Amit\",\r\n    \"last_name\": \"K\",\r\n    \"avatar\": \"\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{reqres-uri}}/users"
+			},
+			"response": []
+		},
+		{
+			"name": "Update Put - M3",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Tests\r",
+							"\r",
+							"// Basic HTTP Code Test\r",
+							"pm.test(\"Check status Code: 200\", () => {\r",
+							"    pm.expect(pm.response.code).equals(200)\r",
+							"})\r",
+							"\r",
+							"// Basic HTTP Res Header Test\r",
+							"pm.test(\"Content-Type header is present\", () => {\r",
+							"  pm.response.to.have.header(\"Content-Type\");\r",
+							"});\r",
+							"\r",
+							"// Basic HTTP Res Time Test\r",
+							"pm.test(\"Response time is less than 200ms\", () => {\r",
+							"  pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+							"});\r",
+							"\r",
+							"var req = pm.request.toJSON();\r",
+							"var req_jsonData = JSON.parse(req.body.raw);\r",
+							"var res_jsonData = pm.response.json();\r",
+							"\r",
+							"\r",
+							"// test first name\r",
+							"pm.test(\"Verify 'first_name' updated with correct values.\", () => {\r",
+							"    const req_fname = req_jsonData['first_name'],\r",
+							"    res_fname = res_jsonData['first_name']\r",
+							"    pm.expect(req_fname).equals(res_fname);\r",
+							"    postman.setEnvironmentVariable(\"user-fname\", res_fname)\r",
+							"})\r",
+							"\r",
+							"// test last name\r",
+							"pm.test(\"Verify 'last_name' updated with correct values.\", () => {\r",
+							"    const req_lname = req_jsonData['last_name'],\r",
+							"    res_lname = res_jsonData['last_name']\r",
+							"    pm.expect(req_lname).equals(res_lname);\r",
+							"    postman.setEnvironmentVariable(\"user-lname\", res_lname)\r",
+							"})\r",
+							"\r",
+							"// test email\r",
+							"pm.test(\"Verify 'email' updated with correct values.\", () => {\r",
+							"    const req_email = req_jsonData['email'],\r",
+							"    res_email = res_jsonData['email']\r",
+							"    pm.expect(req_email).equals(res_email);\r",
+							"    postman.setEnvironmentVariable(\"user-email\", res_email)\r",
+							"})\r",
+							"\r",
+							"// check for field `updatedAt`\r",
+							"pm.test(\"Check whether the field “updatedAt” is present in the response body\", () => {\r",
+							"    pm.expect(res_jsonData).to.haveOwnProperty('updatedAt')\r",
+							"})\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\": \"amith.kumar@reqres.in\",\r\n    \"first_name\": \"Amith\",\r\n    \"last_name\": \"Kumar\",\r\n    \"avatar\": \"\", \"id\": \"664\",\r\n    \"createdAt\": \"2022-02-15T15:18:16.933Z\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{reqres-uri}}/users"
+			},
+			"response": []
+		}
+	]
+}
