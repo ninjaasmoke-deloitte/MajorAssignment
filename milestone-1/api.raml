@@ -1,0 +1,40 @@
+#%RAML 1.0
+types:
+  GetUserDataType:
+    properties:
+      id:
+        example: 2484
+        type: number
+        format: int
+      name:
+        example: Nithin Sai K J
+        type: string
+      email:
+        example: nsaikj@deloitte.com
+        type: string
+      gender:
+        enum:
+          - male
+          - female
+          - other
+        example: male
+        type: string
+      status:
+        enum:
+          - active
+          - inactive
+        example: inactive
+        type: string
+title: IE Major Assignment - Nithin Sai KJ
+mediaType:
+  - application/json
+version: v1
+protocols:
+  - HTTP
+/milestone1:
+  get:
+    responses:
+      "200":
+        body:
+          items:
+            type: GetUserDataType
