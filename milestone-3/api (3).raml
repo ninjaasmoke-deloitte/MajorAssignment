@@ -1,0 +1,98 @@
+#%RAML 1.0
+types:
+  GetUserDataType:
+    properties:
+      id:
+        example: 2484
+        type: number
+        format: int
+      name:
+        example: Nithin Sai K J
+        type: string
+      email:
+        example: nsaikj@deloitte.com
+        type: string
+      gender:
+        enum:
+          - male
+          - female
+          - other
+        example: male
+        type: string
+      status:
+        enum:
+          - active
+          - inactive
+        example: inactive
+        type: string
+  M2PostUserDataType:
+    properties:
+      post_id:
+        description: given `post_id`
+        example: 2003
+        type: number
+        format: int
+      id:
+        description: ID number of the user corresponding to the `post_id`
+        example: 1978
+        type: number
+        format: int
+      name:
+        description: Name of the user corresponding to the `post_id`
+        example: Incredible Hulk Hogan
+        type: string
+  M3GetDataType:
+    properties:
+      name:
+        example: Emma Watson
+        type: string
+      status:
+        enum:
+          - active
+          - inactive
+        example: active
+        type: string
+      gender:
+        enum:
+          - male
+          - female
+          - other
+        example: female
+        type: string
+title: IE Major Assignment - Nithin Sai KJ
+mediaType:
+  - application/json
+version: v1
+protocols:
+  - HTTP
+/milestone1:
+  get:
+    responses:
+      "200":
+        body:
+          items:
+            type: GetUserDataType
+/milestone2:
+  post:
+    body:
+      application/json:
+        properties:
+          post_id:
+            description: post_id of the post we need users' details from
+            example: 2003
+            type: number
+            format: int
+    responses:
+      "200":
+        body:
+          description: Returns a list of userdetails corresponding to the `post_id` from POST request body
+          properties:
+            Userdetails:
+              items:
+                type: M2PostUserDataType
+/milestone3:
+  get:
+    responses:
+      "200":
+        body:
+          type: M3GetDataType
